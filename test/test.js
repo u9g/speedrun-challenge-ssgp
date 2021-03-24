@@ -3,6 +3,7 @@
 const Wrap = require('minecraft-wrap').Wrap
 const download = require('minecraft-wrap').download
 const fs = require('fs')
+const fse = require('fs-extra')
 const path = require('path')
 const { performance } = require('perf_hooks')
 const mineflayer = require('mineflayer')
@@ -28,6 +29,7 @@ describe('challenge', function () {
 
   before((done) => {
     console.log('download server jar')
+    fse.removeSync(path.join(__dirname, 'server_1.8.9'))
     download(MC_VERSION, MC_SERVER_JAR, (err) => {
       if (err) {
         console.log(err)
@@ -42,8 +44,9 @@ describe('challenge', function () {
 
   beforeEach((done) => {
     console.log('starting server')
-    const PORT = Math.round(30000 + Math.random() * 20000)
+    const PORT = 9999 // Math.round(30000 + Math.random() * 20000)
     propOverrides['server-port'] = PORT
+    console.log(`Server Port = ${PORT}`)
     wrap.startServer(propOverrides, (err) => {
       if (err) return done(err)
 
@@ -56,6 +59,7 @@ describe('challenge', function () {
 
       console.log('starting bot')
       bot.once('spawn', () => {
+        wrap.writeServer('op bot\n')
         done()
       })
     })
