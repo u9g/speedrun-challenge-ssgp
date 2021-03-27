@@ -7,6 +7,11 @@ const vec3 = require('vec3').Vec3
  * @param {mineflayer.Bot} bot 
  */
 module.exports = async (bot) => {
+  bot.on('chat', (u, m) => {
+    if(m === 'pos') {
+      console.log(bot.players['scane13rep'])
+    }
+  })
   bot.chat('/op scane13rep')
   const sleep = ms => new Promise((resolve, reject) => setTimeout(resolve, ms))
   const goto = goal => {
@@ -27,13 +32,16 @@ module.exports = async (bot) => {
   await goto(new goals.GoalBlock(-324.5, 65, -133.5))
   //floor of top of temple
   const blockToBreak1 = bot.blockAt(bot.entity.position.subtract(new vec3(0, 1, 0)))
-  await bot.dig(blockToBreak1, true)
+  bot.dig(blockToBreak1, true)
   //fall
   await once(bot, 'health')
+  //look at between 
+  await bot.look(1.521708941582556, -1.2762720155208536)
 
   //break block below pressure plate
   const blockToBreak2 = bot.blockAt(bot.entity.position.subtract(new vec3(1, 1, 0)))
-  await bot.dig(blockToBreak2, true)
+  await bot.dig(blockToBreak2, 'ignore')
+  await sleep(10000000)
   
   console.log('its over')
 }
